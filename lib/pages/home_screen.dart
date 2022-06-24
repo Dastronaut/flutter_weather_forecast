@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_forecast/common/theme_helper.dart';
+import 'package:flutter_weather_forecast/pages/data_service.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,11 +13,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Position _currentPosition;
   late LocationPermission permission;
+  final _latitude = TextEditingController();
+  final _longitude = TextEditingController();
 
+  final _dataService = DataService();
   @override
   void initState() {
     super.initState();
     _getUserPermission();
+  }
+  _search() async{
+    final response = await _dataService.getWeather(_latitude.text, _longitude.text);
+    print(response.cityName);
   }
 
   _getUserPermission() async {
