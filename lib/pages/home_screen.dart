@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_forecast/common/theme_helper.dart';
 import 'package:flutter_weather_forecast/pages/data_service.dart';
+import 'package:flutter_weather_forecast/pages/model.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,18 +14,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Position _currentPosition;
   late LocationPermission permission;
-  final _latitude = TextEditingController();
-  final _longitude = TextEditingController();
-
+  // final _latitude = TextEditingController();
+  // final _longitude = TextEditingController();
+  final _cityTextController = TextEditingController();
   final _dataService = DataService();
+   WeatherResponse? _response = null;
   @override
   void initState() {
     super.initState();
     _getUserPermission();
   }
   _search() async{
-    final response = await _dataService.getWeather(_latitude.text, _longitude.text);
-    print(response.cityName);
+    final response = await _dataService.getWeather(_cityTextController.text);
+    setState(() => _response = response);
   }
 
   _getUserPermission() async {
@@ -53,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: (){},
             icon: const Icon(Icons.settings),
           ),
         ],
@@ -73,34 +75,55 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: Column(children: [
-          _location(),
-          _temperature(),
-          _decription(),
-          _rangeTemperature(),
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-            height: 200,
-            width: MediaQuery.of(context).size.width - 20,
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-            decoration: ThemeHelper().informationBoxDecoration(),
-            // child: Text(currentPosition.isMocked == true
-            //     ? "Lat: ${currentPosition.altitude.toString()}"
-            //     : "Long: ${currentPosition.longitude.toString()}"),
-            child: const Text('OK'),
+          if(_response != null)
+            Column(
+              children: [
+                Text(
+                  '${_response?.tempInfo.temperature}°',style: TextStyle(fontSize: 40),
+                ),
+                Text(
+                  _response!.weatherInfo.description
+                ),
+              ],
+            ),
+
+          TextField(
+          controller: _cityTextController,
+          decoration: InputDecoration(labelText: 'City'),
+          style: TextStyle(fontSize: 28),
           ),
+          ElevatedButton(onPressed: _search, child: Text("Search"))
+
+          // _location(),
+          // _temperature(),
+          // _decription(),
+          // _rangeTemperature(),
+
+          // Container(
+          //   margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          //   height: 200,
+          //   width: MediaQuery.of(context).size.width - 20,
+          //   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          //   decoration: ThemeHelper().informationBoxDecoration(),
+          //   // child: Text(currentPosition.isMocked == true
+          //   //     ? "Lat: ${currentPosition.altitude.toString()}"
+          //   //     : "Long: ${currentPosition.longitude.toString()}"),
+          //   child: const Text('OK'),
+          //),
         ]),
       ),
     );
   }
 }
 
-_location() {
-  return const Text(
-    'Da Nang',
-    style: TextStyle(fontSize: 28),
-  );
-}
-
+  _location() {
+    return const Text(
+      // controller: _cityTextController,
+      //decoration: InputDecoration(labelText: 'City'),
+      'Da Nang',
+      style: TextStyle(fontSize: 28),
+    );
+  }
 _temperature() {
   return const Text(
     '31',
