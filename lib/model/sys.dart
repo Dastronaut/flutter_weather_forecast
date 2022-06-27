@@ -2,8 +2,8 @@ class Sys {
   late int type;
   late int id;
   late String country;
-  late int sunrise;
-  late int sunset;
+  late String sunrise;
+  late String sunset;
 
   Sys(
       {required this.type,
@@ -16,8 +16,8 @@ class Sys {
     type = json['type'];
     id = json['id'];
     country = json['country'];
-    sunrise = json['sunrise'];
-    sunset = json['sunset'];
+    sunrise = getClockInUtcPlus3Hours(json['sunrise'] as int);
+    sunset = getClockInUtcPlus3Hours(json['sunset'] as int);
   }
 
   Map<String, dynamic> toJson() {
@@ -28,5 +28,12 @@ class Sys {
     data['sunrise'] = sunrise;
     data['sunset'] = sunset;
     return data;
+  }
+
+  String getClockInUtcPlus3Hours(int timeSinceEpochInSec) {
+    final time = DateTime.fromMillisecondsSinceEpoch(timeSinceEpochInSec * 1000,
+            isUtc: true)
+        .add(const Duration(hours: 3));
+    return '${time.hour}:${time.second}';
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_weather_forecast/common/sub_weather_item.dart';
 import 'package:flutter_weather_forecast/common/theme_helper.dart';
 import 'package:flutter_weather_forecast/model/current_weather_data.dart';
 import 'package:flutter_weather_forecast/service/data_service.dart';
@@ -93,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 200,
+                        height: 210,
                         child: Card(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
@@ -113,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .caption!
                                         .copyWith(
                                           color: Colors.black45,
-                                          fontSize: 24,
+                                          fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'flutterfonts',
                                         ),
@@ -151,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 fontFamily: 'flutterfonts'),
                                       ),
                                       Text(
-                                        'min: ${(_currentWeather.main.tempMin).round().toString()}\u2103 / max: ${(_currentWeather.main.tempMax).round().toString()}\u2103',
+                                        'Cao: ${(_currentWeather.main.tempMin).round().toString()}\u2103 / Thấp: ${(_currentWeather.main.tempMax).round().toString()}\u2103',
                                         style: Theme.of(context)
                                             .textTheme
                                             .caption!
@@ -182,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         Text(
-                                          'wind ${_currentWeather.wind.speed} m/s',
+                                          'Gió ${_currentWeather.wind.speed} m/s',
                                           style: Theme.of(context)
                                               .textTheme
                                               .caption!
@@ -205,14 +206,58 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(
                         height: 8,
                       ),
-                      Text(
-                        'other city'.toUpperCase(),
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontSize: 16,
-                              fontFamily: 'flutterfonts',
-                              color: Colors.black45,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      GridView.count(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(20),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisCount: 2,
+                        children: <Widget>[
+                          SubWeather(
+                            icon: Icons.device_thermostat,
+                            title: 'Cảm nhận',
+                            value:
+                                '${_currentWeather.main.feelsLike.toString()}\u2103',
+                            description: '',
+                          ),
+                          SubWeather(
+                            icon: Icons.speed_outlined,
+                            title: 'Áp suất',
+                            value:
+                                '${_currentWeather.main.pressure.toString()} hPa',
+                            description: _currentWeather.main.pressure > 1010
+                                ? 'Áp suất cao'
+                                : 'Áp suất thấp',
+                          ),
+                          SubWeather(
+                            icon: Icons.water_drop_outlined,
+                            title: 'Độ ẩm',
+                            value:
+                                '${_currentWeather.main.humidity.toString()} %',
+                            description: '',
+                          ),
+                          SubWeather(
+                            icon: Icons.waves_outlined,
+                            title: 'Tốc độ gió',
+                            value:
+                                '${_currentWeather.wind.speed.toString()} km/h',
+                            description: '',
+                          ),
+                          SubWeather(
+                            icon: Icons.sunny_snowing,
+                            title: 'Mặt trời mọc',
+                            value: _currentWeather.sys.sunrise,
+                            description:
+                                'Mặt trời lặn: ${_currentWeather.sys.sunset}',
+                          ),
+                          SubWeather(
+                            icon: Icons.sunny_snowing,
+                            title: 'Mặt trời mọc',
+                            value: _currentWeather.sys.sunrise,
+                            description:
+                                'Mặt trời lặn: ${_currentWeather.sys.sunset}',
+                          ),
+                        ],
                       ),
                     ],
                   ),

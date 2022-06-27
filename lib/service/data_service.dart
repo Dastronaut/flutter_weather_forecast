@@ -31,7 +31,7 @@ class DataService {
   Future<WeatherResponse> getCurrentWeatherByCity(String city) async {
     final queryParameters = {
       'q': city,
-      'units': 'imperial',
+      'units': 'metric',
       'lang': 'vi',
       'appid': 'ce5288066fb41d132b0d04c767292984'
     };
