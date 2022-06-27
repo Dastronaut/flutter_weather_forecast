@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_weather_forecast/common/sub_weather_item.dart';
 import 'package:flutter_weather_forecast/common/theme_helper.dart';
 import 'package:flutter_weather_forecast/model/current_weather_data.dart';
+import 'package:flutter_weather_forecast/pages/search_screen.dart';
 import 'package:flutter_weather_forecast/service/data_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Position? _currentPosition;
   late LocationPermission permission;
   final _dataService = DataService();
-  Future<CurrentWeatherData>? currentWeatherData;
+  Future<CurrentWeatherData>? _currentWeatherData;
 
   @override
   void initState() {
@@ -53,11 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((position) {
       setState(() {
         _currentPosition = position;
-        // currentWeatherData = _dataService.getCurrentWeatherByLatLon(
+        // _currentWeatherData = _dataService.getCurrentWeatherByLatLon(
         //     _currentPosition!.latitude.toString(),
         //     _currentPosition!.longitude.toString());
-        currentWeatherData =
-            _dataService.getCurrentWeatherByLatLon('35.1', '139.1');
+        _currentWeatherData =
+            _dataService.getCurrentWeatherByLatLon(lat: 35.1, lon: 139.1);
       });
     }).catchError((e) {
       print(e);
@@ -74,8 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () async {
+              showSearch(
+                context: context,
+                delegate: SearchScreen(),
+              );
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ),
         body: FutureBuilder<CurrentWeatherData>(
-          future: currentWeatherData,
+          future: _currentWeatherData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               CurrentWeatherData _currentWeather = snapshot.data!;
@@ -93,8 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 210,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        height: 232,
                         child: Card(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
