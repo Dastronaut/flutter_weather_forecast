@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather_forecast/common/theme_helper.dart';
+import 'package:flutter_weather_forecast/service/data_service.dart';
+import 'package:flutter_weather_forecast/pages/model.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,11 +13,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Position _currentPosition;
   late LocationPermission permission;
-
+  final _cityTextController = TextEditingController();
+  final _dataService = DataService();
+  WeatherResponse? _response;
   @override
   void initState() {
     super.initState();
     _getUserPermission();
+  }
+
+  _search() async {
+    final response = await _dataService.getWeather(_cityTextController.text);
+    setState(() => _response = response);
   }
 
   _getUserPermission() async {
@@ -41,46 +49,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/sunny.jpg'),
+              fit: BoxFit.cover,
+              opacity: 0.8,
+            ),
           ),
-        ],
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.search),
+          child: Column(children: [
+            if (_response != null)
+              Column(
+                children: [
+                  Text(
+                    '${_response?.tempInfo.temperature}°',
+                    style: TextStyle(fontSize: 40),
+                  ),
+                  Text(_response!.weatherInfo.description),
+                ],
+              ),
+
+            TextField(
+              controller: _cityTextController,
+              decoration: InputDecoration(labelText: 'City'),
+              style: TextStyle(fontSize: 28),
+            ),
+            ElevatedButton(onPressed: _search, child: Text("Search")),
+
+            _location(),
+            _temperature(),
+            _decription(),
+            _rangeTemperature(),
+
+            // Container(
+            //   margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            //   height: 200,
+            //   width: MediaQuery.of(context).size.width - 20,
+            //   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            //   decoration: ThemeHelper().informationBoxDecoration(),
+            //   // child: Text(currentPosition.isMocked == true
+            //   //     ? "Lat: ${currentPosition.altitude.toString()}"
+            //   //     : "Long: ${currentPosition.longitude.toString()}"),
+            //   child: const Text('OK'),
+            //),
+          ]),
         ),
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/sunny.jpg'),
-            fit: BoxFit.cover,
-            opacity: 0.8,
-          ),
-        ),
-        child: Column(children: [
-          _location(),
-          _temperature(),
-          _decription(),
-          _rangeTemperature(),
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-            height: 200,
-            width: MediaQuery.of(context).size.width - 20,
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-            decoration: ThemeHelper().informationBoxDecoration(),
-            // child: Text(currentPosition.isMocked == true
-            //     ? "Lat: ${currentPosition.altitude.toString()}"
-            //     : "Long: ${currentPosition.longitude.toString()}"),
-            child: const Text('OK'),
-          ),
-        ]),
       ),
     );
   }
@@ -88,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 _location() {
   return const Text(
+    // controller: _cityTextController,
+    //decoration: InputDecoration(labelText: 'City'),
     'Da Nang',
     style: TextStyle(fontSize: 28),
   );
