@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_forecast/common/sub_weather_item.dart';
 import 'package:flutter_weather_forecast/model/current_weather_data.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_weather_forecast/model/forecast_weather_data.dart';
 import 'package:flutter_weather_forecast/pages/search_screen.dart';
 import 'package:flutter_weather_forecast/service/data_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -53,11 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((position) {
       setState(() {
         _currentPosition = position;
-        // _currentWeatherData = DataService.getCurrentWeatherByLatLon(lon: position.longitude, lat: position.latitude);
-        _currentWeatherData =
-            DataService.getCurrentWeatherByLatLon(lat: 35.1, lon: 139.1);
-        _forecastWeatherData =
-            DataService.getForecastWeatherData(lon: 139.1, lat: 35.1);
+        _currentWeatherData = DataService.getCurrentWeatherByLatLon(
+            lon: position.longitude, lat: position.latitude);
+        _forecastWeatherData = DataService.getForecastWeatherData(
+            lon: position.longitude, lat: position.latitude);
       });
     }).catchError((e) {
       print(e);
@@ -120,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .textTheme
                                         .caption!
                                         .copyWith(
-                                          color: Colors.black45,
+                                          color: Colors.black54,
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'flutterfonts',
@@ -143,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .textTheme
                                             .caption!
                                             .copyWith(
-                                              color: Colors.black45,
+                                              color: Colors.black54,
                                               fontSize: 22,
                                               fontFamily: 'flutterfonts',
                                             ),
@@ -155,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .textTheme
                                             .headline2!
                                             .copyWith(
-                                                color: Colors.black45,
+                                                color: Colors.black54,
                                                 fontFamily: 'flutterfonts'),
                                       ),
                                       Text(
@@ -164,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .textTheme
                                             .caption!
                                             .copyWith(
-                                              color: Colors.black45,
+                                              color: Colors.black54,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               fontFamily: 'flutterfonts',
@@ -196,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                                color: Colors.black45,
+                                                color: Colors.black54,
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: 'flutterfonts',
@@ -236,6 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: 140,
                                       height: 150,
                                       child: Card(
+                                        color: Colors.white.withOpacity(0.65),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -245,27 +244,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                               MainAxisAlignment.center,
                                           children: <Widget>[
                                             Text(
-                                              _forecastWeather.daily[0].dt
-                                                  .toString(),
+                                              DateFormat.E()
+                                                  .format(DateTime.now()),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .caption!
                                                   .copyWith(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.black45,
+                                                    color: Colors.black54,
                                                     fontFamily: 'flutterfonts',
                                                   ),
                                             ),
                                             Text(
-                                              '${(_forecastWeather.daily[0].temp.day).round().toString()}\u2103',
+                                              '${(_forecastWeather.daily[index].temp.day).round().toString()}\u2103',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .caption!
                                                   .copyWith(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.black45,
+                                                    color: Colors.black54,
                                                     fontFamily: 'flutterfonts',
                                                   ),
                                             ),
@@ -277,17 +276,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   image: AssetImage(
                                                       'assets/images/icon-01.jpg'),
                                                   fit: BoxFit.cover,
+                                                  opacity: 0.65,
                                                 ),
                                               ),
                                             ),
                                             Text(
-                                              _forecastWeather.daily[0]
+                                              _forecastWeather.daily[index]
                                                   .weather[0].description,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .caption!
                                                   .copyWith(
-                                                    color: Colors.black45,
+                                                    color: Colors.black54,
                                                     fontFamily: 'flutterfonts',
                                                     fontSize: 14,
                                                   ),

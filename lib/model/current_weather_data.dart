@@ -1,5 +1,6 @@
 import 'package:flutter_weather_forecast/model/clouds.dart';
 import 'package:flutter_weather_forecast/model/coord.dart';
+import 'package:flutter_weather_forecast/model/main_weather.dart';
 import 'package:flutter_weather_forecast/model/sys.dart';
 import 'package:flutter_weather_forecast/model/weather.dart';
 import 'package:flutter_weather_forecast/model/wind.dart';
@@ -42,15 +43,15 @@ class CurrentWeatherData {
         weather.add(Weather.fromJson(v));
       });
     }
-    base = json['base'];
+    base = '';
     main = (json['main'] != null ? Main.fromJson(json['main']) : null)!;
-    visibility = json['visibility'];
+    visibility = 0;
     wind = (json['wind'] != null ? Wind.fromJson(json['wind']) : null)!;
     clouds = (json['clouds'] != null ? Clouds.fromJson(json['clouds']) : null)!;
     dt = json['dt'];
     sys = (json['sys'] != null ? Sys.fromJson(json['sys']) : null)!;
-    timezone = json['timezone'];
-    id = json['id'];
+    timezone = 0;
+    id = 0;
     name = json['name'];
     cod = json['cod'];
   }

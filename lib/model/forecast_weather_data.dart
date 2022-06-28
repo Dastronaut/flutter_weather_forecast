@@ -16,16 +16,12 @@ class ForecastWeatherData {
   ForecastWeatherData.fromJson(Map<String, dynamic> json) {
     lat = json['lat'];
     lon = json['lon'];
-    timezone = json['timezone'];
-    timezoneOffset = json['timezone_offset'];
+    timezone = '';
+    timezoneOffset = 0;
     if (json['daily'] != null) {
       daily = <Daily>[];
       json['daily'].forEach((v) {
-        if (json.containsKey('rain')) {
-          daily.add(Daily.fromJson(v));
-        } else {
-          daily.add(Daily.fromJson2(v));
-        }
+        daily.add(Daily.fromJson(v));
       });
     }
   }
@@ -87,49 +83,21 @@ class Daily {
 
   Daily.fromJson(Map<String, dynamic> json) {
     dt = json['dt'];
-    sunrise = json['sunrise'];
-    sunset = json['sunset'];
-    moonrise = json['moonrise'];
-    moonset = json['moonset'];
+    sunrise = 0;
+    sunset = 0;
+    moonrise = 0;
+    moonset = 0;
     moonPhase = 0.0;
     temp = (json['temp'] != null ? Temp.fromJson(json['temp']) : null)!;
     feelsLike = (json['feels_like'] != null
         ? FeelsLike.fromJson(json['feels_like'])
         : null)!;
-    pressure = json['pressure'];
-    humidity = json['humidity'];
-    dewPoint = json['dew_point'];
-    windSpeed = json['wind_speed'];
-    windDeg = json['wind_deg'];
-    windGust = json['wind_gust'];
-    if (json['weather'] != null) {
-      weather = <Weather>[];
-      json['weather'].forEach((v) {
-        weather.add(Weather.fromJson(v));
-      });
-    }
-    clouds = json['clouds'];
-    pop = json['pop'];
-    uvi = json['uvi'];
-    rain = json['rain'];
-  }
-
-  Daily.fromJson2(Map<String, dynamic> json) {
-    dt = json['dt'];
-    sunrise = json['sunrise'];
-    sunset = json['sunset'];
-    moonrise = json['moonrise'];
-    moonset = json['moonset'];
-    moonPhase = 0.0;
-    temp = (json['temp'] != null ? Temp.fromJson(json['temp']) : null)!;
-    feelsLike = (json['feels_like'] != null
-        ? FeelsLike.fromJson(json['feels_like'])
-        : null)!;
-    pressure = json['pressure'];
-    humidity = json['humidity'];
-    dewPoint = json['dew_point'];
-    windSpeed = json['wind_speed'];
-    windDeg = json['wind_deg'];
+    pressure = 0;
+    humidity = 0;
+    dewPoint = 0;
+    windSpeed = 0;
+    windDeg = 0;
+    windGust = 0.0;
     if (json['weather'] != null) {
       weather = <Weather>[];
       json['weather'].forEach((v) {
@@ -138,7 +106,34 @@ class Daily {
     }
     clouds = json['clouds'];
     pop = 0.0;
-    uvi = json['uvi'];
+    uvi = 0.0;
+  }
+
+  Daily.fromJson2(Map<String, dynamic> json) {
+    dt = json['dt'];
+    sunrise = 0;
+    sunset = 0;
+    moonrise = 0;
+    moonset = 0;
+    moonPhase = 0.0;
+    temp = (json['temp'] != null ? Temp.fromJson(json['temp']) : null)!;
+    feelsLike = (json['feels_like'] != null
+        ? FeelsLike.fromJson(json['feels_like'])
+        : null)!;
+    pressure = 0;
+    humidity = 0;
+    dewPoint = 0;
+    windSpeed = 0;
+    windDeg = 0;
+    if (json['weather'] != null) {
+      weather = <Weather>[];
+      json['weather'].forEach((v) {
+        weather.add(Weather.fromJson(v));
+      });
+    }
+    clouds = 0;
+    pop = 0.0;
+    uvi = 0.0;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -190,11 +185,11 @@ class Temp {
 
   Temp.fromJson(Map<String, dynamic> json) {
     day = json['day'];
-    min = json['min'];
-    max = json['max'];
-    night = json['night'];
-    eve = json['eve'];
-    morn = json['morn'];
+    min = 0.0;
+    max = 0.0;
+    night = 0.0;
+    eve = 0.0;
+    morn = 0.0;
   }
 
   Map<String, dynamic> toJson() {

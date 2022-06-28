@@ -26,7 +26,7 @@ class SubWeather extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.caption!.copyWith(
                   fontFamily: 'flutterfonts',
-                  color: Colors.black45,
+                  color: Colors.black54,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -39,7 +39,7 @@ class SubWeather extends StatelessWidget {
           style: Theme.of(context).textTheme.caption!.copyWith(
                 fontSize: 28,
                 fontFamily: 'flutterfonts',
-                color: Colors.black45,
+                color: Colors.black54,
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -50,7 +50,7 @@ class SubWeather extends StatelessWidget {
           description,
           style: Theme.of(context).textTheme.caption!.copyWith(
                 fontFamily: 'flutterfonts',
-                color: Colors.black45,
+                color: Colors.black54,
                 fontWeight: FontWeight.bold,
               ),
         ),

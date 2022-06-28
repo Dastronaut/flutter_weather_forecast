@@ -7,8 +7,8 @@ class Wind {
 
   Wind.fromJson(Map<String, dynamic> json) {
     speed = json['speed'];
-    deg = json['deg'];
-    gust = json['gust'];
+    deg = 0;
+    gust = 0;
   }
 
   Map<String, dynamic> toJson() {

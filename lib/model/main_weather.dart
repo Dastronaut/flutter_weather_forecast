@@ -5,8 +5,6 @@ class Main {
   late double tempMax;
   late int pressure;
   late int humidity;
-  late int seaLevel;
-  late int grndLevel;
 
   Main(
       {required this.temp,
@@ -14,9 +12,7 @@ class Main {
       required this.tempMin,
       required this.tempMax,
       required this.pressure,
-      required this.humidity,
-      required this.grndLevel,
-      required this.seaLevel});
+      required this.humidity});
 
   Main.fromJson(Map<String, dynamic> json) {
     temp = json['temp'];
@@ -25,8 +21,6 @@ class Main {
     tempMax = json['temp_max'];
     pressure = json['pressure'];
     humidity = json['humidity'];
-    seaLevel = json['sea_level'];
-    grndLevel = json['grnd_level'];
   }
 
   Map<String, dynamic> toJson() {
@@ -37,8 +31,6 @@ class Main {
     data['temp_max'] = tempMax;
     data['pressure'] = pressure;
     data['humidity'] = humidity;
-    data['sea_level'] = seaLevel;
-    data['grnd_level'] = grndLevel;
     return data;
   }
 }

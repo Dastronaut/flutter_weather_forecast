@@ -57,7 +57,7 @@ class SearchScreen extends SearchDelegate {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       height: 210,
                       child: Card(
-                        color: Colors.white,
+                        color: Colors.white.withOpacity(0.65),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
@@ -74,7 +74,7 @@ class SearchScreen extends SearchDelegate {
                                       .textTheme
                                       .caption!
                                       .copyWith(
-                                        color: Colors.black45,
+                                        color: Colors.black87,
                                         fontSize: 30,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'flutterfonts',
@@ -96,7 +96,7 @@ class SearchScreen extends SearchDelegate {
                                           .textTheme
                                           .caption!
                                           .copyWith(
-                                            color: Colors.black45,
+                                            color: Colors.black87,
                                             fontSize: 22,
                                             fontFamily: 'flutterfonts',
                                           ),
@@ -108,7 +108,7 @@ class SearchScreen extends SearchDelegate {
                                           .textTheme
                                           .headline2!
                                           .copyWith(
-                                              color: Colors.black45,
+                                              color: Colors.black87,
                                               fontFamily: 'flutterfonts'),
                                     ),
                                     Text(
@@ -117,7 +117,7 @@ class SearchScreen extends SearchDelegate {
                                           .textTheme
                                           .caption!
                                           .copyWith(
-                                            color: Colors.black45,
+                                            color: Colors.black54,
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'flutterfonts',
@@ -138,6 +138,7 @@ class SearchScreen extends SearchDelegate {
                                             image: AssetImage(
                                                 'assets/images/icon-01.jpg'),
                                             fit: BoxFit.cover,
+                                            opacity: 0.65,
                                           ),
                                         ),
                                       ),
@@ -147,7 +148,7 @@ class SearchScreen extends SearchDelegate {
                                             .textTheme
                                             .caption!
                                             .copyWith(
-                                              color: Colors.black45,
+                                              color: Colors.black87,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               fontFamily: 'flutterfonts',
