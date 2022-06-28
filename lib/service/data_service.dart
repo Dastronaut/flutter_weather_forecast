@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter_weather_forecast/model/current_weather_data.dart';
+import 'package:flutter_weather_forecast/model/forecast_weather_data.dart';
 import 'package:http/http.dart' as http;
 
 class DataService {
   static const String _apiKey = '189df97f5958253ef6c38a94537fa094';
 
-  Future<CurrentWeatherData> getCurrentWeatherByLatLon(
-      {required double lat, required double lon}) async {
+  static Future<CurrentWeatherData> getCurrentWeatherByLatLon(
+      {required double lon, required double lat}) async {
     final queryParameters = {
       'lat': lat.toString(),
       'lon': lon.toString(),
@@ -29,7 +30,7 @@ class DataService {
     return CurrentWeatherData.fromJson(json);
   }
 
-  Future<CurrentWeatherData> getCurrentWeatherByCity(
+  static Future<CurrentWeatherData> getCurrentWeatherByCity(
       {required String city}) async {
     final queryParameters = {
       'q': city,
@@ -66,5 +67,26 @@ class DataService {
     }).toList();
   }
 
-  void getFiveDaysThreeHoursForcastData() {}
+  static Future<ForecastWeatherData> getForecastWeatherData(
+      {required double lon, required double lat}) async {
+    final queryParameters = {
+      'lat': lat.toString(),
+      'lon': lon.toString(),
+      'exclude': 'current,hourly,minutely,alerts',
+      'units': 'metric',
+      'lang': 'vi',
+      'appid': _apiKey
+    };
+
+    final uri = Uri.https(
+      'api.openweathermap.org',
+      '/data/2.5/onecall',
+      queryParameters,
+    );
+    final response = await http.get(uri);
+    print(uri);
+    final json = jsonDecode(response.body);
+    print(response.body);
+    return ForecastWeatherData.fromJson(json);
+  }
 }

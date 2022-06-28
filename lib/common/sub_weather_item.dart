@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SubWeather extends StatelessWidget {
-  late IconData icon;
-  late String title;
-  late String value;
-  late String description;
+  final IconData icon;
+  final String title;
+  final String value;
+  final String description;
 
-  SubWeather({
+  const SubWeather({
     Key? key,
     required this.icon,
     required this.title,
@@ -57,7 +57,7 @@ class SubWeather extends StatelessWidget {
       ]),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.65),
       ),
     );
   }

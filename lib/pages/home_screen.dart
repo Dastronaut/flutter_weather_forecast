@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_forecast/common/sub_weather_item.dart';
-import 'package:flutter_weather_forecast/common/theme_helper.dart';
 import 'package:flutter_weather_forecast/model/current_weather_data.dart';
+import 'package:flutter_weather_forecast/model/forecast_weather_data.dart';
 import 'package:flutter_weather_forecast/pages/search_screen.dart';
 import 'package:flutter_weather_forecast/service/data_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,8 +18,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Position? _currentPosition;
   late LocationPermission permission;
-  final _dataService = DataService();
   Future<CurrentWeatherData>? _currentWeatherData;
+  Future<ForecastWeatherData>? _forecastWeatherData;
 
   @override
   void initState() {
@@ -54,21 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((position) {
       setState(() {
         _currentPosition = position;
-        // _currentWeatherData = _dataService.getCurrentWeatherByLatLon(
-        //     _currentPosition!.latitude.toString(),
-        //     _currentPosition!.longitude.toString());
+        // _currentWeatherData = DataService.getCurrentWeatherByLatLon(lon: position.longitude, lat: position.latitude);
         _currentWeatherData =
-            _dataService.getCurrentWeatherByLatLon(lat: 35.1, lon: 139.1);
+            DataService.getCurrentWeatherByLatLon(lat: 35.1, lon: 139.1);
+        _forecastWeatherData =
+            DataService.getForecastWeatherData(lon: 139.1, lat: 35.1);
       });
     }).catchError((e) {
       print(e);
     });
   }
-
-  // _search() async {
-  //   final response = await _dataService.getWeather(_cityTextController.text);
-  //   setState(() => _response = response);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             horizontal: 15, vertical: 10),
                         height: 232,
                         child: Card(
-                          color: Colors.white,
+                          color: Colors.white.withOpacity(0.65),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
@@ -192,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               image: AssetImage(
                                                   'assets/images/icon-01.jpg'),
                                               fit: BoxFit.cover,
+                                              opacity: 0.65,
                                             ),
                                           ),
                                         ),
@@ -216,6 +211,100 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      FutureBuilder<ForecastWeatherData>(
+                          future: _forecastWeatherData,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              ForecastWeatherData _forecastWeather =
+                                  snapshot.data!;
+                              return SizedBox(
+                                height: 150,
+                                child: ListView.separated(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  separatorBuilder: (context, index) =>
+                                      const VerticalDivider(
+                                    color: Colors.transparent,
+                                    width: 5,
+                                  ),
+                                  itemCount: snapshot.data!.daily.length,
+                                  itemBuilder: (context, index) {
+                                    return SizedBox(
+                                      width: 140,
+                                      height: 150,
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              _forecastWeather.daily[0].dt
+                                                  .toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption!
+                                                  .copyWith(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black45,
+                                                    fontFamily: 'flutterfonts',
+                                                  ),
+                                            ),
+                                            Text(
+                                              '${(_forecastWeather.daily[0].temp.day).round().toString()}\u2103',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption!
+                                                  .copyWith(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black45,
+                                                    fontFamily: 'flutterfonts',
+                                                  ),
+                                            ),
+                                            Container(
+                                              width: 50,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/images/icon-01.jpg'),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              _forecastWeather.daily[0]
+                                                  .weather[0].description,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption!
+                                                  .copyWith(
+                                                    color: Colors.black45,
+                                                    fontFamily: 'flutterfonts',
+                                                    fontSize: 14,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          }),
                       const SizedBox(
                         height: 8,
                       ),
@@ -287,54 +376,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-_location(CurrentWeatherData weatherData) {
-  return Text(
-    // _currentWeather: _cityTextController,
-    //decoration: InputDecoration(labelText: 'City'),
-    weatherData.name,
-    style: const TextStyle(fontSize: 28),
-  );
-}
-
-_temperature(CurrentWeatherData weatherData) {
-  return Text(
-    weatherData.main.temp.toString(),
-    style: const TextStyle(fontSize: 100),
-  );
-}
-
-_decription(CurrentWeatherData weatherData) {
-  return Text(
-    weatherData.weather[0].description,
-    style: const TextStyle(fontSize: 22),
-  );
-}
-
-_rangeTemperature(CurrentWeatherData weatherData) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      Text(
-        weatherData.main.tempMax.toString(),
-        style: const TextStyle(fontSize: 18),
-      ),
-      Text(
-        weatherData.main.tempMin.toString(),
-        style: const TextStyle(fontSize: 18),
-      ),
-    ],
-  );
-}
-
-// _hourlyForecast(BuildContext context) {
-//   return Container(
-//     margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-//     height: 200,
-//     width: MediaQuery.of(context).size.width - 20,
-//     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-//     decoration: ThemeHelper().informationBoxDecoration(),
-//     child: Text(
-//         _position.latitude.toString() + ', ' + _position.longitude.toString()),
-//   );
-// }
